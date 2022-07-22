@@ -1,0 +1,68 @@
+spring:
+# 网关 - 路由
+  cloud:
+    gateway:
+      default-filters:
+        - Session
+      routes:
+        - id: oauth2
+          uri: lb://cy-security-server
+          order: 0
+          predicates:
+            - Path=/oauth2/**
+          filters:
+            - StripPrefix=1
+            - name: Session
+              args:
+                name: default
+                fallbackUri: forward:/fallback
+        - id: admin
+          uri: lb://cy-rbac-service
+          order: 1
+          predicates:
+            - Path=/admin/**
+          filters:
+            - StripPrefix=1
+        - id: soc
+          uri: lb://cy-soc-service
+          order: 1
+          predicates:
+            - Path=/soc/**,/screen/**
+          filters:
+            - StripPrefix=1
+        - id: collect
+          uri: lb://cy-collection-service
+          order: 1
+          predicates:
+            - Path=/collect/**
+          filters:
+            - StripPrefix=1
+        - id: soc-screen
+          uri: lb://cy-soc-screen
+          order: 1
+          predicates:
+            - Path=/soc-screen/**
+          filters:
+            - StripPrefix=1
+  #redis配置
+  redis:
+    host: ${base.redis.host}
+    port: ${base.redis.port}
+    password: ${base.redis.password}
+
+ip:
+  validate:
+    white:
+      list: false
+
+cy:
+  # 是否开发校验码，默认开启 cy.security.validate.code=true
+  # 路由配置
+  doc:
+    gateway:
+      enable: true
+      # 需要聚合的swagger服务
+      resources: admin,soc,collect,oauth2
+    code: 
+      ignoreClientCode: 
+        - gongshi
