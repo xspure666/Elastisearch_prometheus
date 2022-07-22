@@ -1,0 +1,11 @@
+elastisearch:
+    ip: 10.1.2.172:9200,10.1.2.173:9200,10.1.2.174:9200    # Elastisearch IP地址，格式为     IP1:端口,IP2:端口,IP3:端口
+    time_late: 120  # 查询的时间间隔，单位分钟
+
+
+包：
+pip install pyyaml
+pip install nacos
+pip install elasticsearch6
+pip install flask
+pip install prometheus_client
